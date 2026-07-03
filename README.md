@@ -92,7 +92,7 @@ module mul_fixedpoint(
 endmodule
 ```
 
-##4. Chia 2 số nhị phân có dấu
+## 4. Chia 2 số nhị phân có dấu
 ```
 module div_fixedpoint(
 	input [31:0] a,b,
