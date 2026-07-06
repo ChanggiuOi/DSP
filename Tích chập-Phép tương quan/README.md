@@ -6,7 +6,7 @@
 
 ## 2. Tương quan chéo
 
-![alt](Anh2.jpg)
+![alt](Anh2.jpg) 
 
 ## 3. Tự tương quan
 
