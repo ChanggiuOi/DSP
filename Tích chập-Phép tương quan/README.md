@@ -10,7 +10,7 @@
 
 ## 3. Tự tương quan
 
-![alt](Anh3.jpg)
+![alt](Anh3.jpg) 
 
 ## 4. Code
 
