@@ -268,7 +268,7 @@ module FIR_HPF_Hanning_11(
    mult_fp mul2 (h2, x2, y2);
    mult_fp mul3 (h3, x3, y3);
    mult_fp mul4 (h4, x4, y4);
-	mult_fp mul5 (h5, x5, y5);
+   mult_fp mul5 (h5, x5, y5);
    mult_fp mul6 (h4, x6, y6);
    mult_fp mul7 (h3, x7, y7);
    mult_fp mul8 (h2, x8, y8);
@@ -329,7 +329,7 @@ module tb_FIR_HPF_Hanning_11;
       @(posedge clk) data_in = 16'sd8;
       @(posedge clk) data_in = 16'sd9;
       @(posedge clk) data_in = 16'sd10;
-		@(posedge clk) data_in = 16'sd1;
+	  @(posedge clk) data_in = 16'sd1;
       @(posedge clk) data_in = 16'sd2;
       @(posedge clk) data_in = 16'sd3;
       @(posedge clk) data_in = 16'sd4;
