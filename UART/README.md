@@ -78,16 +78,6 @@
 
 - Cuối cùng, mạch đưa chân tx lên mức 1 để tạo bit STOP. Sau đó mạch phát một xung tx_done_tick. Xung này "đọc" (pop) phần tử tiếp theo trong FIFO, quy trình lặp lại nếu FIFO vẫn còn dữ liệu.
 
-#### 2.1.3. FSM của UART Transmitter
-
-- Idle: Trạng thái nghỉ. Giữ chân tx = 1 (đường truyền rảnh). Đợi tín hiệu tx_start = 1 (tức là FIFO có dữ liệu). Khi có tín hiệu, nạp dữ liệu và chuyển sang trạng thái Start.
-
-- Start: Kéo chân tx = 0 làm bit START. Bộ đếm đếm số xung s_tick để đảm bảo bit START kéo dài đúng 1 chu kỳ baud. Sau đó chuyển sang trạng thái Data.
-
-- Data: Dịch tuần tự các bit dữ liệu ra chân tx. Tại mỗi bit, mạch đếm s_tick để định thời gian. Sau khi truyền đủ số bit (VD: 8 bit), chuyển sang trạng thái Stop.
-
-- Stop: Kéo chân tx = 1 làm bit STOP. Sau khi đếm đủ thời gian 1 chu kỳ baud của bit STOP, phát xung tx_done_tick = 1 trong một chu kỳ clock để báo hiệu lấy data mới từ FIFO, sau đó quay lại Idle.
-
 ### 2.2 UART Receiver
 
 - Khối này nhận tín hiệu nối tiếp từ đường truyền, giải mã thành dữ liệu song song và đẩy vào bộ đệm FIFO để hệ thống (CPU) đọc sau.
@@ -111,16 +101,6 @@
 - Bộ thu tiếp tục đếm s_tick để lấy mẫu chính xác tại "điểm giữa" của các bit dữ liệu tiếp theo, dịch từng bit vào một thanh ghi nội bộ.
 
 - Sau khi lấy mẫu đủ các bit dữ liệu và kiểm tra xong bit STOP (chờ rx lên 1), mạch xuất dữ liệu song song ra dout, đồng thời phát một xung lên rx_done_tick để đẩy byte này vào FIFO lưu trữ.
-
-#### 2.2.3. FSM của UART Receiver
-
-- Idle: Trạng thái chờ. Theo dõi tín hiệu rx và chờ sự kiện rx = 0 (bit START rơi xuống logic thấp).
-
-- Start: Xác minh bit START bằng cách đếm xung s_tick đến giữa chu kỳ bit. Nếu rx vẫn ở mức 0, chuyển sang trạng thái Data.
-
-- Data: Trạng thái nhận dữ liệu. Lấy mẫu tại giữa mỗi bit (đếm đủ số s_tick cho 1 chu kỳ bit) và dịch vào thanh ghi. Lặp lại cho đến khi đủ số bit (thường là 8).
-
-- Stop: Chờ nhận bit STOP. Nếu hợp lệ, kích hoạt rx_done_tick trong 1 chu kỳ hệ thống, xuất dữ liệu và quay lại trạng thái Idle.
 
 ## 3. Mô phỏng trên Quaruts
 
