@@ -26,7 +26,7 @@
 	
 	![alt](Anh4.png)
 	
-	+ Điều kiện Stop: Đường SDA kéo điện áo từ LOW lên HIGH trước khi SCL chuyển từ LOW lên HIGH
+	+ Điều kiện Stop: Đường SDA kéo điện áo từ LOW lên HIGH sau khi SCL chuyển từ LOW lên HIGH
 	
 	![alt](Anh5.png)
 	
