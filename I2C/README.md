@@ -48,22 +48,76 @@
 		
 	+ Data Frame (Khung dữ liệu): Một chuỗi 8 bit chứa dữ liệu mong muốn nhận/gửi từ master/slave
 	
-### 1.3. Một master với nhiều slave
+### 1.2.1. Start and Stop Conditions
 
-![alt](Anh3.png)
+![alt](Anh8.png)
 
-- Một master có thể đọc/ghi dữ liệu từ nhiều slave bằng cách xác định đúng adddress frame trong Message
+### 1.2.2. Data Validity and Byte Format
 
-### 1.4. Nhiều master với nhiều slave
+![alt](Anh9.png)
 
-![alt](Anh7.png)
+- SDA(đường dữ liệu nối tiếp) hoạt động phụ thuộc vào SCL (đường xung nhịp nối tiếp) khi SCL kéo lên cao thì SDA mới truyền được dữ liệu
 
-- Nếu 2 master Start tại cùng 1 thời điểm, muốn yêu cầu cùng đọc/ghi dữ liệu tại cùng 1 slave sẽ xảy ra Arbitration (phân xử bus)
+- SCL luôn do Master tạo (nên mới có trường hợp khi FPGA làm master thì phải tính 1 loại xung nhịp mới dựa theo xung clk)
 
-	+ Vì I2C cùng open-drain, nên master yêu cầu Write luôn thắng (được truyền dữ liệu trước)
+### 1.2.3. ACK and NACK
+
+![alt](Anh10.png)
+
+- ACK khi SDA kéo xuống thấp
+
+- NACK khi SDA kéo lên cao
+
+### 1.2.4. Ghi dữ liệu vào Slave
+
+![alt](Anh11.png)
+
+### 1.2.5. Đọc dữ liệu trong Slave
+
+![alt](Anh12.png)
+
+- Repeated START giống tín hiệu START bình thường, chỉ khác ở chỗ không cần STOP trước đó và Bus vẫn được MASTER giữ
+
+- Việc sử dụng Repeated START nhằm chuyển đổi giữa 2 trạng thái R và W mà Master không quên địa chỉ cần mong muốn trước đó (thay vì dùng STOP rồi sang START khiến bus giải phóng, không nhớ địa chỉ)
+
+//### 1.3. Một master với nhiều slave
+
+//![alt](Anh3.png)
+
+//- Một master có thể đọc/ghi dữ liệu từ nhiều slave bằng cách xác định đúng adddress frame trong Message
+
+//### 1.4. Nhiều master với nhiều slave
+
+//![alt](Anh7.png)
+
+//- Nếu 2 master Start tại cùng 1 thời điểm, muốn yêu cầu cùng đọc/ghi dữ liệu tại cùng 1 slave sẽ xảy ra Arbitration (phân xử bus)
+
+//	+ Vì I2C cùng open-drain, nên master yêu cầu Write luôn thắng (được truyền dữ liệu trước)
 	
-	+ Master thua sẽ dừng điểu khiển SDA, chuyển sang chỉ theo dõi bus chờ Master thắng truyền xong, khi bus rảnh sẽ truyền lại mà KHÔNG CẦN RESET BUS VÀ DỮ LIỆU 
+//	+ Master thua sẽ dừng điểu khiển SDA, chuyển sang chỉ theo dõi bus chờ Master thắng truyền xong, khi bus rảnh sẽ truyền lại mà KHÔNG CẦN RESET BUS VÀ DỮ LIỆU 
 	
+### 1.5. Tri-sate buffer (được FPGA sử dụng khi giao tiếp I2C với các ngoại vi)
+
+![alt](Anh13.png)
+
+- Trong đó:
+
+	+ X: Dữ liệu Master muốn xuất ra
+	
+	+ Y: chân vật lú SDA nối ra ngoài
+	
+	+ EN: Tín hiệu cho phép FPGA điều khiển SDA
+
+- Tri-State sẻ dụng khi nhiều thiết bị cùng chia sẻ một đường tín hiệu (bus)
+
+#### 1.5.1. Một Master - Một Slave (FPGA là Master)
+
+- EN = 1: FPGA đang truyền dữ liệu (START, địa chỉ, dữ liệu, ACK của Master), nên Y = X.
+
+- EN = 0: FPGA nhả SDA về trạng thái Z để Slave gửi ACK hoặc dữ liệu; lúc này FPGA chỉ đọc giá trị trên SDA.
+
+	+ Slave điều khiển đường SDA khi muốn gửi ACK hoặc gửi dữ liệu cho Master (bit R/W=1)
+
 ## 2. I2C 
 
 - Code
